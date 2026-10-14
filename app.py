@@ -8,7 +8,7 @@ app = Flask(__name__)
 with open('naiveB.pkl', 'rb') as f:
   model = pickle.load(f)
 
-# Modern, attractive responsive layout with embedded CSS (Tailwind via CDN)
+# Clean template without label artifacts
 TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +34,7 @@ TEMPLATE = """
             
             <!-- Education -->
             <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Education[cite: 1]</label>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Education</label>
                 <select name="Education" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <option value="Bachelors">Bachelors</option>
                     <option value="Masters">Masters</option>
@@ -44,13 +44,13 @@ TEMPLATE = """
 
             <!-- JoiningYear -->
             <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Joining Year[cite: 1]</label>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Joining Year</label>
                 <input type="number" name="JoiningYear" required min="2012" max="2026" placeholder="e.g. 2018" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
 
             <!-- City -->
             <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">City[cite: 1]</label>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">City</label>
                 <select name="City" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <option value="Bangalore">Bangalore</option>
                     <option value="Pune">Pune</option>
@@ -60,7 +60,7 @@ TEMPLATE = """
 
             <!-- PaymentTier -->
             <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Payment Tier[cite: 1]</label>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Payment Tier</label>
                 <select name="PaymentTier" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <option value="1">Tier 1</option>
                     <option value="2">Tier 2</option>
@@ -70,13 +70,13 @@ TEMPLATE = """
 
             <!-- Age -->
             <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Age[cite: 1]</label>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Age</label>
                 <input type="number" name="Age" required min="18" max="70" placeholder="e.g. 28" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
 
             <!-- Gender -->
             <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Gender[cite: 1]</label>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Gender</label>
                 <select name="Gender" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
@@ -85,7 +85,7 @@ TEMPLATE = """
 
             <!-- EverBenched -->
             <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Ever Benched[cite: 1]</label>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Ever Benched</label>
                 <select name="EverBenched" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <option value="No">No</option>
                     <option value="Yes">Yes</option>
@@ -94,7 +94,7 @@ TEMPLATE = """
 
             <!-- ExperienceInCurrentDomain -->
             <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Experience in Domain[cite: 1]</label>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Experience in Domain</label>
                 <input type="number" name="ExperienceInCurrentDomain" required min="0" max="20" placeholder="e.g. 3" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
 
@@ -130,7 +130,6 @@ def home():
   prediction = None
   if request.method == 'POST':
     try:
-      # Retrieve form variables matching feature names[cite: 1]
       education = request.form['Education']
       joining_year = float(request.form['JoiningYear'])
       city = request.form['City']
@@ -140,7 +139,7 @@ def home():
       ever_benched = request.form['EverBenched']
       exp_domain = float(request.form['ExperienceInCurrentDomain'])
 
-      # Categorical mappings (adjust these numbers if your training encoder used a different mapping)
+      # Standard label encoding mappings for the employee dataset
       edu_map = {'Bachelors': 0, 'Masters': 1, 'PHD': 2}
       city_map = {'Bangalore': 0, 'Pune': 1, 'New Delhi': 2}
       gender_map = {'Male': 0, 'Female': 1}
@@ -160,7 +159,7 @@ def home():
       pred = model.predict(features)
       prediction = int(pred[0])
     except Exception as e:
-      print(f'Error: {e}')
+      print(f'Prediction error: {e}')
 
   return render_template_string(TEMPLATE, prediction=prediction)
 
