@@ -8,7 +8,7 @@ app = Flask(__name__)
 with open('naiveB.pkl', 'rb') as f:
   model = pickle.load(f)
 
-# Clean template without label artifacts
+# Template displaying explicit Class 0 and Class 1 results
 TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
@@ -112,9 +112,9 @@ TEMPLATE = """
             <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Prediction Outcome</h2>
             <p class="text-2xl font-bold mt-2 {% if prediction == 1 %}text-rose-400{% else %}text-emerald-400{% endif %}">
                 {% if prediction == 1 %}
-                    ⚠️ High Risk / Will Leave
+                    ⚠️ Predicted Class: 1
                 {% else %}
-                    ✅ Low Risk / Will Stay
+                    ✅ Predicted Class: 0
                 {% endif %}
             </p>
         </div>
@@ -139,7 +139,6 @@ def home():
       ever_benched = request.form['EverBenched']
       exp_domain = float(request.form['ExperienceInCurrentDomain'])
 
-      # Standard label encoding mappings for the employee dataset
       edu_map = {'Bachelors': 0, 'Masters': 1, 'PHD': 2}
       city_map = {'Bangalore': 0, 'Pune': 1, 'New Delhi': 2}
       gender_map = {'Male': 0, 'Female': 1}
